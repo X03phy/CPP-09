@@ -10,7 +10,7 @@
 #                                                                              #
 # **************************************************************************** #
 
-NAME = EasyFind
+NAME = btc
 CPPC = c++
 CPPFLAGS = -Wall -Wextra -Werror -std=c++98
 

@@ -1,12 +1,15 @@
 #include <string> // string
 #include <iostream> // cout, cerr, endl
 #include <fstream> // ifstream, getline()
+#include <vector> // vector
 
 class BitcoinExchange
 {
 private:
 	std::string _date;
 	float _value;
+	bool _isPrintable;
+	std::string _errorMessage;
 
 public:
 // Canonical form
@@ -24,20 +27,16 @@ public:
 // Member functions
 
 // Setters
-	void setClass( std::ifstream &infile );
-	void setDate( std::string &date );
-	void setValue( float &value );
-	void setIsPrintable( bool &isPrintable );
+	bool setBitcoinExchange( std::ifstream &infile );
+	static std::vector<BitcoinExchange> setBitcoinExchanges( std::ifstream &infile );
 
 // Getters
 	std::string getDate( void ) const;
 	float getValue( void ) const;
 
 // Date
-	bool isValidDate( void ) const;
+	void checkDate( void );
 
 // Value
-	bool isValidValue( void ) const;
-
-
+	void checkValue( void );
 };
