@@ -30,16 +30,11 @@ public:
 // Member functions
 
 // Getters
-
 	std::string getDate( void );
 	float getValue( void );
 	float getRate( void );
 	bool getIsPrintable( void );
 	std::string getErrorMessage( void );
-
-// Creation
-	bool createBitcoinExchange( std::ifstream &infile, std::ifstream &data );
-	static std::vector<BitcoinExchange> createBitcoinExchanges( std::ifstream &infile, std::ifstream &data );
 
 // Input
 	bool checkInputLine( std::string &line );
@@ -47,6 +42,10 @@ public:
 // Data
 	static bool parseData( std::ifstream &infile );
 	void extractRateFromData( std::ifstream &infile );
+
+// Creation
+	bool createBitcoinExchange( std::ifstream &infile, std::ifstream &data );
+	static std::vector<BitcoinExchange> createBitcoinExchanges( std::ifstream &infile, std::ifstream &data );
 
 // Print
 	static void printBitcoinExchanges( std::vector<BitcoinExchange> bitcoin_exchanges );

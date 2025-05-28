@@ -13,6 +13,6 @@ int main( int argc, char **argv )
 	std::vector<BitcoinExchange> bitcoin_exchanges;
 
 	bitcoin_exchanges = BitcoinExchange::createBitcoinExchanges( infile, data );
-	// BitcoinExchange::printBitcoinExchanges( bitcoin_exchanges );
+	BitcoinExchange::printBitcoinExchanges( bitcoin_exchanges );
 	return (0);
 }
