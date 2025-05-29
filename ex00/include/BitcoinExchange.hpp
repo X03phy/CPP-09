@@ -6,7 +6,7 @@
 /*   By: ebonutto <ebonutto@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 12:18:44 by ebonutto          #+#    #+#             */
-/*   Updated: 2025/05/29 14:06:30 by ebonutto         ###   ########.fr       */
+/*   Updated: 2025/05/29 17:10:23 by ebonutto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,13 @@
 #include <vector> // vector
 #include <sstream> // istringstream
 #include <cstdlib> // strtof()
+
+typedef struct s_date
+{
+	unsigned short int year;
+	unsigned char month;
+	unsigned char day;
+} t_date;
 
 class BitcoinExchange
 {

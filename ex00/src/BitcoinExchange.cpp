@@ -6,7 +6,7 @@
 /*   By: ebonutto <ebonutto@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 12:18:37 by ebonutto          #+#    #+#             */
-/*   Updated: 2025/05/29 12:18:38 by ebonutto         ###   ########.fr       */
+/*   Updated: 2025/05/29 17:28:48 by ebonutto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,13 +45,34 @@ bool BitcoinExchange::getIsPrintable( void ) { return ( _isPrintable ); }
 std::string BitcoinExchange::getErrorMessage( void ) { return ( _errorMessage ); }
 
 // Parsing
+bool is_leap_year( unsigned short int year )
+{
+	return ( ( year % 4 ) && ( year ) );
+}
+
+bool is_date_valid( t_date *date )
+{
+	if ( date->year <= 0 || date->month <= 0 || date->day <= 0 )
+		return ( false );
+	if ( date->month > 12 || date->day > 31 )
+		return ( false );
+	if ( date->day == 31 && ( date->month == 4 || date->month == 6 || date->month == 9 || date->month == 11 ) ) return ( false );
+	if ( date->month == 2 ) {
+		if ( date->day > 29 ) return ( false );
+		if ( date->day == 29 && ( !is_leap_year( date->year ) ) ) return ( false );
+	}
+	return true;
+}
+
 bool BitcoinExchange::checkInputLineDate( std::string &line, unsigned char &i )
 {
+	t_date date = {0, 0, 0};
 	// Handle year-month-day ( yyyy-mm-dd )
 	for ( ; i < 4; ++i ) // Handle year
 	{
 		if ( isdigit( line[i] ) == 0 )
 			return ( false );
+		date.year = 10 * date.year + 
 	}
 
 	if ( line[i++] != '-' ) // Handle first '-'
