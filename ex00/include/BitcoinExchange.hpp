@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   BitcoinExchange.hpp                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ebonutto <ebonutto@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/29 12:18:44 by ebonutto          #+#    #+#             */
+/*   Updated: 2025/05/29 12:18:45 by ebonutto         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <string> // string
 #include <iostream> // cout, cerr, endl
 #include <fstream> // ifstream, getline()
