@@ -6,11 +6,11 @@
 #    By: ebonutto <ebonutto@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/29 12:18:32 by ebonutto          #+#    #+#              #
-#    Updated: 2025/05/29 12:18:33 by ebonutto         ###   ########.fr        #
+#    Updated: 2025/05/29 13:42:18 by ebonutto         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = btc
+NAME = RPN
 CPPC = c++
 CPPFLAGS = -Wall -Wextra -Werror -std=c++98
 
@@ -19,7 +19,7 @@ SRC_DIR = src/
 INC_DIR = include/
 
 SRC = main.cpp \
-	  BitcoinExchange.cpp
+	  RPN.cpp
 OBJ = $(addprefix $(OBJ_DIR), $(SRC:.cpp=.o))
 
 all: $(NAME)

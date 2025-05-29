@@ -1,20 +1,8 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: ebonutto <ebonutto@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/29 12:18:41 by ebonutto          #+#    #+#             */
-/*   Updated: 2025/05/29 12:18:41 by ebonutto         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "BitcoinExchange.hpp"
 
 int main( int argc, char **argv )
 {
-	if ( argc != 3 )
+	if ( argc != 2 )
 	{
 		std::cerr << "Error: invalid number of arguments." << std::endl;
 		return (1);
@@ -27,10 +15,10 @@ int main( int argc, char **argv )
 		return (1);
 	}
 
-	std::ifstream dataInfile( argv[2] );
+	std::ifstream dataInfile( "data.csv" );
 	if ( !dataInfile.is_open() )
 	{
-		std::cerr << "Error: " << argv[2] << " does not exist." << std::endl;
+		std::cerr << "Error: " << "data.csv" << " does not exist." << std::endl;
 		infile.close();
 		return (1);
 	}
