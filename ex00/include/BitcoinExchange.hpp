@@ -36,12 +36,13 @@ public:
 	bool getIsPrintable( void );
 	std::string getErrorMessage( void );
 
-// Input
+// Parsing
+	static bool checkInputLineDate( std::string &line, unsigned char &i );
+	static bool parseData( std::ifstream &infile );
 	bool checkInputLine( std::string &line );
 
 // Data
-	static bool parseData( std::ifstream &infile );
-	void extractRateFromData( std::ifstream &infile );
+	void extractRateFromData( std::ifstream &dataInfile );
 
 // Creation
 	bool createBitcoinExchange( std::ifstream &infile, std::ifstream &data );

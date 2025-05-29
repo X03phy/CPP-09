@@ -20,7 +20,7 @@ BitcoinExchange &BitcoinExchange::operator=( const BitcoinExchange &other )
 		_isPrintable = other._isPrintable;
 		_errorMessage = other._errorMessage;
 	}
-	return (*this);
+	return ( *this );
 }
 
 // Member functions
@@ -32,48 +32,82 @@ float BitcoinExchange::getRate( void ) { return ( _rate ); }
 bool BitcoinExchange::getIsPrintable( void ) { return ( _isPrintable ); }
 std::string BitcoinExchange::getErrorMessage( void ) { return ( _errorMessage ); }
 
-// Input
+// Parsing
+bool BitcoinExchange::checkInputLineDate( std::string &line, unsigned char &i )
+{
+	// Handle year-month-day ( yyyy-mm-dd )
+	for ( ; i < 4; ++i ) // Handle year
+	{
+		if ( isdigit( line[i] ) == 0 )
+			return ( false );
+	}
+
+	if ( line[i++] != '-' ) // Handle first '-'
+		return ( false );
+
+	for ( ; i < 7; ++i ) // Handle month
+	{
+		if ( isdigit( line[i] ) == 0 )
+			return ( false );
+	}
+
+	if ( line[i++] != '-' ) // Handle second '-'
+		return ( false );
+
+	for ( ; i < 10; ++i ) // Handle day
+	{
+		if ( isdigit( line[i] ) == 0 )
+			return ( false );
+	}
+	return ( true );
+}
+
+bool BitcoinExchange::parseData( std::ifstream &dataInfile )
+{
+	std::string line;
+	std::string date;
+	std::string rate;
+	unsigned char i;
+
+	getline( dataInfile, line ); // obtient la premiere ligne : "date,exchange_rate"
+	if ( line != "date,exchange_rate" )
+		return ( false );
+
+	while ( getline( dataInfile, line ) )
+	{
+		i = 0;
+		if ( BitcoinExchange::checkInputLineDate( line, i ) == false )
+			return (false);
+
+		if ( line[i++] != ',' ) // Handle ','
+			return ( false );
+
+		float value;
+		char *end;
+		const char *exchange;
+
+		exchange = line.c_str() + i; // Debut du mot
+		value = std::strtof( exchange, &end );
+		if ( end == exchange || *end != '\0')
+			return ( false );
+	}
+
+	return ( true );
+}
+
 bool BitcoinExchange::checkInputLine( std::string &line )
 {
 	unsigned char i = 0 ;
 
-	for ( ; i < 4; ++i )
-	{
-		if ( isdigit( line[i] ) == 0 )
-			return ( false );
-	}
+	if ( BitcoinExchange::checkInputLineDate( line, i ) == false )
+		return (false);
 
-	if ( line[i] != '-' )
+	// Handle " | "
+	if ( line[i++] != ' ' )
 		return ( false );
 
-	++i;
-
-	for ( ; i < 7; ++i )
-	{
-		if ( isdigit( line[i] ) == 0 )
-			return ( false );
-	}
-
-	if (line[i] != '-')
+	if ( line[i++] != '|' )
 		return ( false );
-
-	++i;
-
-	for ( ; i < 10; ++i )
-	{
-		if ( isdigit( line[i] ) == 0 )
-			return ( false );
-	}
-
-	if ( line[i] != ' ' )
-		return ( false );
-
-	++i;
-
-	if ( line[i] != '|' )
-		return ( false );
-
-	++i;
 
 	if ( line[i] != ' ' )
 		return ( false );
@@ -82,57 +116,43 @@ bool BitcoinExchange::checkInputLine( std::string &line )
 	char *end;
 	const char *exchange;
 
-	exchange = line.c_str() + i;
+	exchange = line.c_str() + i; // Debut du mot
 	value = std::strtof( exchange, &end );
 	if ( end == exchange || *end != '\0')
 		return ( false );
+
+	if ( value < 0 )
+	{
+		_errorMessage = "Error: not a positive number.";
+		return ( false );
+	}
+	
+	if ( value > 1000 )
+	{
+		_errorMessage = "Error: too large a number.";
+		return ( false );
+	}
 
 	std::istringstream ss( line );
 
 	getline( ss, _date, ' ' );
 	_value = value;
 
-	return (true);
+	return ( true );
 }
 
 // Data
-// bool BitcoinExchange::parseData( std::ifstream &infile )
-// {
-// 	getline( infile, data ); // skip la premiere ligne : "date,exchange_rate"
-// 	if ( data != "date,exchange_rate" )
-// 	{
-// 		_errorMessage = "Missing \"date,exchange_rate\" on top ( line 1 ) of data file";
-// 		return ( false );
-// 	}
-// 		getline( ss, date, ',');
-// 	if ( _date == date )
-// 	{
-// 		char *end;
-
-// 		getline( ss, rate );
-// 		_rate = std::strtof( rate.c_str(), &end );
-// 		if (end == rate.c_str() || *end != '\0')
-// 		{
-// 			_errorMessage = "Invalid rate in "
-// 			return ( false );
-// 		}
-
-// 		return ( true );
-// 	}
-// }
-
-void BitcoinExchange::extractRateFromData( std::ifstream &infile )
+void BitcoinExchange::extractRateFromData( std::ifstream &dataInfile )
 {
 	std::string data;
 	std::string date;
 	std::string rate;
 
-	infile.clear();            // Clear EOF flag
-	infile.seekg(0, std::ios::beg); // Remet le curseur au début du fichier
+	dataInfile.clear();                   // Clear EOF flag
+	dataInfile.seekg(0, std::ios::beg);   // Remet le curseur au début du fichier
+	getline( dataInfile, data );          // skip la premiere ligne : "date,exchange_rate"
 
-
-	getline( infile, data ); // skip la premiere ligne : "date,exchange_rate"
-	while ( getline( infile, data ) )
+	while ( getline( dataInfile, data ) )
 	{
 		std::istringstream ss( data );
 
@@ -155,11 +175,10 @@ bool BitcoinExchange::createBitcoinExchange( std::ifstream &infile, std::ifstrea
 	std::string line;
 
 	getline( infile, line );
-	if ( line == "" )
-		return ( false );
 	if ( this->checkInputLine( line ) == false )
 	{
-		this->_errorMessage = "Error: bad input => " + line;
+		if ( _errorMessage == "None" )
+			this->_errorMessage = "Error: bad input => " + line;
 		return ( true );
 	}
 	this->extractRateFromData( data );
