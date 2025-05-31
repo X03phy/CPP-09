@@ -45,21 +45,21 @@ bool BitcoinExchange::getIsPrintable( void ) { return ( _isPrintable ); }
 std::string BitcoinExchange::getErrorMessage( void ) { return ( _errorMessage ); }
 
 // Parsing
-bool is_leap_year( unsigned short int year )
+bool BitcoinExchange::is_leap_year( unsigned short int year )
 {
-	return ( ( year % 4 ) && ( year ) );
+	return ( ( year % 4 == 0 ) && ( ( year % 100 != 0 ) || ( year % 400 == 0 ) ) );
 }
 
-bool is_date_valid( t_date *date )
+bool BitcoinExchange::is_date_valid( t_date &date )
 {
-	if ( date->year <= 0 || date->month <= 0 || date->day <= 0 )
+	if ( date.year <= 0 || date.month <= 0 || date.day <= 0 )
 		return ( false );
-	if ( date->month > 12 || date->day > 31 )
+	if ( date.month > 12 || date.day > 31 )
 		return ( false );
-	if ( date->day == 31 && ( date->month == 4 || date->month == 6 || date->month == 9 || date->month == 11 ) ) return ( false );
-	if ( date->month == 2 ) {
-		if ( date->day > 29 ) return ( false );
-		if ( date->day == 29 && ( !is_leap_year( date->year ) ) ) return ( false );
+	if ( date.day == 31 && ( date.month == 4 || date.month == 6 || date.month == 9 || date.month == 11 ) ) return ( false );
+	if ( date.month == 2 ) {
+		if ( date.day > 29 ) return ( false );
+		if ( date.day == 29 && ( !is_leap_year( date.year ) ) ) return ( false );
 	}
 	return true;
 }
@@ -72,7 +72,7 @@ bool BitcoinExchange::checkInputLineDate( std::string &line, unsigned char &i )
 	{
 		if ( isdigit( line[i] ) == 0 )
 			return ( false );
-		date.year = 10 * date.year + 
+		date.year = 10 * date.year + ( line[i] - '0' );
 	}
 
 	if ( line[i++] != '-' ) // Handle first '-'
@@ -82,6 +82,7 @@ bool BitcoinExchange::checkInputLineDate( std::string &line, unsigned char &i )
 	{
 		if ( isdigit( line[i] ) == 0 )
 			return ( false );
+		date.month = 10 * date.month + ( line[i] - '0' );
 	}
 
 	if ( line[i++] != '-' ) // Handle second '-'
@@ -91,7 +92,12 @@ bool BitcoinExchange::checkInputLineDate( std::string &line, unsigned char &i )
 	{
 		if ( isdigit( line[i] ) == 0 )
 			return ( false );
+		date.day = 10 * date.day + ( line[i] - '0' );
 	}
+
+	if ( !is_date_valid( date ) )
+		return ( false );
+
 	return ( true );
 }
 
@@ -110,18 +116,15 @@ bool BitcoinExchange::parseData( std::ifstream &dataInfile )
 	{
 		i = 0;
 		if ( BitcoinExchange::checkInputLineDate( line, i ) == false )
-			return (false);
+			return ( false );
 
 		if ( line[i++] != ',' ) // Handle ','
 			return ( false );
 
-		float value;
 		char *end;
-		const char *exchange;
 
-		exchange = line.c_str() + i; // Debut du mot
-		value = std::strtof( exchange, &end );
-		if ( end == exchange || *end != '\0')
+		( void ) std::strtof( line.c_str() + i, &end );
+		if ( end == line.c_str() + i || *end != '\0')
 			return ( false );
 	}
 
@@ -159,10 +162,10 @@ bool BitcoinExchange::checkInputLine( std::string &line )
 		_errorMessage = "Error: not a positive number.";
 		return ( false );
 	}
-	
+
 	if ( value > 1000 )
 	{
-		_errorMessage = "Error: too large a number.";
+		_errorMessage = "Error: number too large.";
 		return ( false );
 	}
 
@@ -182,22 +185,32 @@ void BitcoinExchange::extractRateFromData( std::ifstream &dataInfile )
 	std::string rate;
 
 	dataInfile.clear();                   // Clear EOF flag
-	dataInfile.seekg(0, std::ios::beg);   // Remet le curseur au début du fichier
+	dataInfile.seekg( 0, std::ios::beg );   // Remet le curseur au début du fichier
 	getline( dataInfile, data );          // skip la premiere ligne : "date,exchange_rate"
 
+	getline( dataInfile, data ); // obtention de la premiere ligne de donnees
+	std::istringstream ss( data );
+
+	getline( ss, date, ',' ); // checker si la date est correcte 
+	if ( _date < date )
+	{
+		_errorMessage = "No exchange was made that day or before";
+		return ;
+	}
+	
 	while ( getline( dataInfile, data ) )
 	{
 		std::istringstream ss( data );
 
-		getline( ss, date, ',');
-		if ( _date == date )
+		getline( ss, date, ',' );
+		if ( _date < date )
 		{
-			getline( ss, rate );
-			_rate = std::strtof( rate.c_str(), NULL );
 			this->_isPrintable = true;
 
 			return ;
 		}
+		getline( ss, rate );
+		_rate = std::strtof( rate.c_str(), NULL );
 	}
 	_errorMessage = "No exchange was made that day";
 }

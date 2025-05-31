@@ -58,6 +58,8 @@ public:
 	std::string getErrorMessage( void );
 
 // Parsing
+	static bool is_leap_year( unsigned short int year );
+	static bool is_date_valid( t_date &date );
 	static bool checkInputLineDate( std::string &line, unsigned char &i );
 	static bool parseData( std::ifstream &infile );
 	bool checkInputLine( std::string &line );
