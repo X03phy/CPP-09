@@ -197,7 +197,7 @@ void BitcoinExchange::extractRateFromData( std::ifstream &dataInfile )
 		_errorMessage = "No exchange was made that day or before";
 		return ;
 	}
-	
+
 	while ( getline( dataInfile, data ) )
 	{
 		std::istringstream ss( data );
