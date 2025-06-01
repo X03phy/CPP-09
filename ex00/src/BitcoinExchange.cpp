@@ -38,11 +38,11 @@ BitcoinExchange &BitcoinExchange::operator=( const BitcoinExchange &other )
 // Member functions
 
 // Getters
-std::string BitcoinExchange::getDate( void ) { return ( _date ); }
-float BitcoinExchange::getValue( void ) { return ( _value ); }
-float BitcoinExchange::getRate( void ) { return ( _rate ); }
-bool BitcoinExchange::getIsPrintable( void ) { return ( _isPrintable ); }
-std::string BitcoinExchange::getErrorMessage( void ) { return ( _errorMessage ); }
+std::string BitcoinExchange::getDate( void ) const { return ( _date ); }
+float BitcoinExchange::getValue( void ) const { return ( _value ); }
+float BitcoinExchange::getRate( void ) const { return ( _rate ); }
+bool BitcoinExchange::getIsPrintable( void ) const { return ( _isPrintable ); }
+std::string BitcoinExchange::getErrorMessage( void ) const { return ( _errorMessage ); }
 
 // Parsing
 bool BitcoinExchange::is_leap_year( unsigned short int year )
@@ -216,7 +216,7 @@ void BitcoinExchange::extractRateFromData( std::ifstream &dataInfile )
 }
 
 // Creation
-bool BitcoinExchange::createBitcoinExchange( std::ifstream &infile, std::ifstream &data )
+void BitcoinExchange::createBitcoinExchange( std::ifstream &infile, std::ifstream &data )
 {
 	std::string line;
 
@@ -225,11 +225,11 @@ bool BitcoinExchange::createBitcoinExchange( std::ifstream &infile, std::ifstrea
 	{
 		if ( _errorMessage == "None" )
 			this->_errorMessage = "Error: bad input => " + line;
-		return ( true );
+		return ;
 	}
 	this->extractRateFromData( data );
 
-	return ( true );
+	return ;
 }
 
 std::vector<BitcoinExchange> BitcoinExchange::createBitcoinExchanges( std::ifstream &infile, std::ifstream &data )

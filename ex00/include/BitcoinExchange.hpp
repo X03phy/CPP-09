@@ -51,11 +51,11 @@ public:
 // Member functions
 
 // Getters
-	std::string getDate( void );
-	float getValue( void );
-	float getRate( void );
-	bool getIsPrintable( void );
-	std::string getErrorMessage( void );
+	std::string getDate( void ) const;
+	float getValue( void ) const;
+	float getRate( void ) const;
+	bool getIsPrintable( void ) const;
+	std::string getErrorMessage( void ) const;
 
 // Parsing
 	static bool is_leap_year( unsigned short int year );
@@ -68,7 +68,7 @@ public:
 	void extractRateFromData( std::ifstream &dataInfile );
 
 // Creation
-	bool createBitcoinExchange( std::ifstream &infile, std::ifstream &data );
+	void createBitcoinExchange( std::ifstream &infile, std::ifstream &data );
 	static std::vector<BitcoinExchange> createBitcoinExchanges( std::ifstream &infile, std::ifstream &data );
 
 // Print
