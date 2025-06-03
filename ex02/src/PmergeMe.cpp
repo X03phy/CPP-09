@@ -71,125 +71,20 @@ std::vector<int> PmergeMe::generateJacobsthalSequence( int n )
 	return ( jacobsthal );
 }
 
-std::vector<int> PmergeMe::mergeInsertionSort( std::vector<int> &container )
-{
-	// Cas de base
-	size_t n = container.size();
-
-	if ( n <= 1 )
-		return ( container );
-	if ( n == 2 )
-	{
-		if ( container[0] > container[1] )
-			std::swap( container[0], container[1] );
-		return ( container );
-	}
-
-	// Former des pairs: grand - petit
-	std::vector< std::pair<int, int> > pairs;
-	bool hasOdd = ( n & 1 );
-	int oddElement;
-
-	if ( hasOdd )
-	{
-		oddElement = container.back();
-		--n;
-	}
-	for ( size_t i = 0; i < n; i += 2 )
-	{
-		if ( container[i] > container[i + 1] )
-			pairs.push_back( std::make_pair( container[i], container[i + 1] ) );
-		else
-			pairs.push_back( std::make_pair(container[i + 1], container[i]) );
-	}
-
-	// Tri recursif des plus grands elements de chaque paire
-	std::vector<int> largerElements;
-	std::vector<int> smallerElements;
-
-	for ( std::vector< std::pair<int, int> >::const_iterator it = pairs.begin(); it != pairs.end(); ++it )
-	{
-		largerElements.push_back( it->first );
-		smallerElements.push_back( it->second );
-	}
-
-	if ( largerElements.size() > 1 )
-		largerElements = mergeInsertionSort( largerElements );
-
-	// Creation de la chaine pricinpale
-	std::vector<int> mainChain = largerElements;
-
-	if ( !smallerElements.empty() )
-	{
-		for ( std::vector< std::pair<int, int> >::const_iterator it = pairs.begin(); it != pairs.end(); ++it )
-		{
-			if ( it->first == mainChain[0] )
-			{
-				mainChain.insert( mainChain.begin(), it->second );
-				break;
-			}
-		}
-	}
-
-	// On cree la liste de petits nombres
-	std::vector<int> pendantChain;
-
-	for ( size_t i = 2; i < mainChain.size(); ++i )
-	{
-		for ( size_t j = 0; j < pairs.size(); ++j )
-		{
-			if ( pairs[j].first == mainChain[i] )
-			{
-				pendantChain.push_back( pairs[j].second );
-				break;
-			}
-		}
-	}
-
-	// On place les petits nombres
-	std::vector<int> jacobsthalSequence = generateJacobsthalSequence( pendantChain.size() );
-	int index;
-	int value;
-	std::vector<int>::iterator pos;
-
-	for (size_t i = 0; i < jacobsthalSequence.size(); ++i)
-	{
-		index = jacobsthalSequence[i] - 1; // car la séquence est en base 1
-		if ( static_cast<size_t>(index) >= pendantChain.size() )
-			continue; // protection au cas où
-
-		value = pendantChain[index];
-		pos = std::lower_bound(mainChain.begin(), mainChain.end(), value);
-		mainChain.insert(pos, value);
-	}
-
-	// Gerer le dernier nb
-	if ( hasOdd )
-	{
-		std::vector<int>::iterator pos = std::lower_bound( mainChain.begin(), mainChain.end(), oddElement );
-		mainChain.insert( pos, oddElement );
-	}
-
-	return ( mainChain );
-
-}
-
-bool PmergeMe::checker( void )
-{
-	if ( _vectorSequence.size() != _vectorSequenceSorted.size() )
-		return ( false );
-
-	for ( size_t i = 0; ( i + 1 ) < _vectorSequenceSorted.size(); ++i )
-		if ( _vectorSequenceSorted[i] > _vectorSequenceSorted[i + 1] )
-			return ( false );
-
-	return ( true );
-}
-
 void PmergeMe::MergeThat( void )
 {
+	struct timeval start, end;
+	long seconds, micros;
+
 	std::cout << "----------vector----------" << std::endl;
+
+	gettimeofday(&start, NULL);
 	_vectorSequenceSorted = mergeInsertionSort( this->_vectorSequence );
+	gettimeofday(&end, NULL);
+
+	seconds = end.tv_sec - start.tv_sec;
+	micros = end.tv_usec - start.tv_usec;
+	_vectorTime = seconds * 1000000 + micros;
 
 	std::cout << "Before: ";
 	for ( size_t i = 0; i < _vectorSequence.size(); ++i )
@@ -211,11 +106,50 @@ void PmergeMe::MergeThat( void )
 			std::cout << std::endl;
 	}
 
+	std::cout << "Time: " << _vectorTime << " µs" << std::endl;
+
 	std::cout << "checker: ";
-	if ( this->checker() == false )
+	if ( this->checker( _vectorSequence, _vectorSequenceSorted ) == false )
 		std::cout << "OK" << std::endl;
 	else
 		std::cout << "KO" << std::endl;
 
+
 	std::cout << "----------deque----------" << std::endl;
+
+	gettimeofday(&start, NULL);
+	_dequeSequenceSorted = mergeInsertionSort( this->_dequeSequence );
+	gettimeofday(&end, NULL);
+
+	seconds = end.tv_sec - start.tv_sec;
+	micros = end.tv_usec - start.tv_usec;
+	_dequeTime = seconds * 1000000 + micros;
+
+	std::cout << "Before: ";
+	for ( size_t i = 0; i < _dequeSequence.size(); ++i )
+	{
+		std::cout << _dequeSequence[i];
+		if ( i != _dequeSequence.size() - 1 )
+			std::cout << ' ';
+		else
+			std::cout << std::endl;
+	}
+
+	std::cout << "After:  ";
+	for ( size_t i = 0; i < _dequeSequenceSorted.size(); ++i )
+	{
+		std::cout << _dequeSequenceSorted[i];
+		if ( i != _dequeSequenceSorted.size() - 1 )
+			std::cout << ' ';
+		else
+			std::cout << std::endl;
+	}
+
+	std::cout << "Time: " << _dequeTime << " µs" << std::endl;
+
+	std::cout << "checker: ";
+	if ( this->checker( _dequeSequence, _dequeSequenceSorted ) == false )
+		std::cout << "OK" << std::endl;
+	else
+		std::cout << "KO" << std::endl;
 }
