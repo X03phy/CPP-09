@@ -1,18 +1,35 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.cpp                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ebonutto <ebonutto@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/06/03 14:01:52 by ebonutto          #+#    #+#             */
+/*   Updated: 2025/06/03 14:23:26 by ebonutto         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "PmergeMe.hpp"
 
 int main( int argc, char **argv )
 {
-	(void)argc;
-	(void)argv;
-	std::vector<int> gello;
-	gello.push_back(0);
-	gello.push_back(10);
+	PmergeMe FJ;
+	std::string input( argv[1] );
+	std::istringstream ss( input );
 
-	gello.push_back(4);
-	gello.push_back(1);
+	if ( argc != 2 )
+	{
+		std::cout << "Invalid number of aruments" << std::endl;
+		return ( 1 );
+	}
 
-	std::cout << "hello" << std::endl;
-	PmergeMe::mergeInsertionSort( gello );
+	if ( FJ.ParseInput( ss ) == false )
+	{
+		std::cerr << "Error: Invalid argument" <<std::endl;
+		return ( 1 );
+	}
+
+	FJ.mergeInsertionSort();
 	return ( 0 );
 }

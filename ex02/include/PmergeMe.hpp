@@ -6,7 +6,7 @@
 /*   By: ebonutto <ebonutto@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 16:28:22 by ebonutto          #+#    #+#             */
-/*   Updated: 2025/05/29 16:28:23 by ebonutto         ###   ########.fr       */
+/*   Updated: 2025/06/03 18:11:23 by ebonutto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,9 @@
 #include <iostream> // cout, cerr, endl
 #include <cstddef> // size_t
 #include <sstream> // istringstream
-#include <cstdlib> // strtod()
-#include <algorithm> // swap()
+#include <cstdlib> // strtol()
+#include <climits> // INT_MIN, INT_MAX
+#include <algorithm> // swap(), lower_bound()
 #include <vector> // vector, iterator
 #include <utility> // pair
 #include <deque> // deque
@@ -25,6 +26,7 @@
 class PmergeMe
 {
 private:
+	std::vector<int> _nbSequence;
 
 public:
 // Default constructor
@@ -40,27 +42,7 @@ public:
 	PmergeMe &operator=( const PmergeMe &other );
 
 // Member functions
-	template <typename T>
-	static void mergeInsertionSort( T &container )
-	{
-		size_t n;
-		std::vector< std::pair< int, int > > pairs;
-		int a;
-		int b;
+	bool ParseInput( std::istringstream &ss );
+	void mergeInsertionSort( void );
 
-		n = container.size();
-
-		if ( n <= 1 )
-			return ;
-
-		for ( size_t i = 0; ( i + 1 ) < n; i += 2 )
-		{
-			a = container[i];
-			b = container[i + 1];
-			if ( b < a )
-				std::swap( a, b );
-			pairs.push_back( make_pair( a, b ) );
-			std::cout << "hello" << " " << 4 << std::endl;
-		}
-	}
 };
