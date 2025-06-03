@@ -14,22 +14,21 @@
 
 int main( int argc, char **argv )
 {
+	if ( argc < 2 )
+	{
+		std::cerr << "Error: Invalid number of arguments" << std::endl;
+		return ( 1 );
+	}
+
 	PmergeMe FJ;
-	std::string input( argv[1] );
-	std::istringstream ss( input );
 
-	if ( argc != 2 )
+	if ( FJ.ParseInput( argv ) == false )
 	{
-		std::cout << "Invalid number of aruments" << std::endl;
+		std::cerr << "Error: Invalid input" << std::endl;
 		return ( 1 );
 	}
 
-	if ( FJ.ParseInput( ss ) == false )
-	{
-		std::cerr << "Error: Invalid argument" <<std::endl;
-		return ( 1 );
-	}
+	FJ.MergeThat();
 
-	FJ.mergeInsertionSort();
 	return ( 0 );
 }

@@ -16,7 +16,7 @@
 #include <iostream> // cout, cerr, endl
 #include <cstddef> // size_t
 #include <sstream> // istringstream
-#include <cstdlib> // strtol()
+#include <cstdlib> // strtol(), exit()
 #include <climits> // INT_MIN, INT_MAX
 #include <algorithm> // swap(), lower_bound()
 #include <vector> // vector, iterator
@@ -26,7 +26,10 @@
 class PmergeMe
 {
 private:
-	std::vector<int> _nbSequence;
+	std::vector<int> _vectorSequence;
+	std::deque<int> _dequeSequence;
+	std::vector<int> _vectorSequenceSorted;
+	std::deque<int> _dequeSequenceSorted;
 
 public:
 // Default constructor
@@ -42,7 +45,11 @@ public:
 	PmergeMe &operator=( const PmergeMe &other );
 
 // Member functions
-	bool ParseInput( std::istringstream &ss );
-	void mergeInsertionSort( void );
+	bool ParseInput( char **argv );
+	void MergeThat( void );
+	static std::vector<int> generateJacobsthalSequence( int n );
+	static std::vector<int> mergeInsertionSort( std::vector<int> &container );
+	// std::deque<int> mergeInsertionSort( std::deque<int> &container );
+	bool checker( void );
 
 };
