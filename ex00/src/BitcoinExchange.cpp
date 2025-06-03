@@ -6,7 +6,7 @@
 /*   By: ebonutto <ebonutto@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 12:18:37 by ebonutto          #+#    #+#             */
-/*   Updated: 2025/05/29 17:28:48 by ebonutto         ###   ########.fr       */
+/*   Updated: 2025/06/03 13:44:01 by ebonutto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -232,9 +232,9 @@ void BitcoinExchange::createBitcoinExchange( std::ifstream &infile, std::ifstrea
 	return ;
 }
 
-std::vector<BitcoinExchange> BitcoinExchange::createBitcoinExchanges( std::ifstream &infile, std::ifstream &data )
+std::list<BitcoinExchange> BitcoinExchange::createBitcoinExchanges( std::ifstream &infile, std::ifstream &data )
 {
-	std::vector<BitcoinExchange> bitcoin_exchanges;
+	std::list<BitcoinExchange> bitcoin_exchanges;
 
 	while ( !infile.eof() )
 	{
@@ -248,10 +248,10 @@ std::vector<BitcoinExchange> BitcoinExchange::createBitcoinExchanges( std::ifstr
 }
 
 // Print
-void BitcoinExchange::printBitcoinExchanges( std::vector<BitcoinExchange> bitcoin_exchanges )
+void BitcoinExchange::printBitcoinExchanges( std::list<BitcoinExchange> bitcoin_exchanges )
 {
 	float result;
-	std::vector<BitcoinExchange>::iterator it;
+	std::list<BitcoinExchange>::iterator it;
 
 	for ( it = bitcoin_exchanges.begin(); it != bitcoin_exchanges.end(); ++it )
 	{

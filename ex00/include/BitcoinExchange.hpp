@@ -6,7 +6,7 @@
 /*   By: ebonutto <ebonutto@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 12:18:44 by ebonutto          #+#    #+#             */
-/*   Updated: 2025/05/29 17:10:23 by ebonutto         ###   ########.fr       */
+/*   Updated: 2025/06/03 13:43:57 by ebonutto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include <string> // string
 #include <iostream> // cout, cerr, endl
 #include <fstream> // ifstream, getline()
-#include <vector> // vector
+#include <list> // list
 #include <sstream> // istringstream
 #include <cstdlib> // strtof()
 
@@ -69,8 +69,8 @@ public:
 
 // Creation
 	void createBitcoinExchange( std::ifstream &infile, std::ifstream &data );
-	static std::vector<BitcoinExchange> createBitcoinExchanges( std::ifstream &infile, std::ifstream &data );
+	static std::list<BitcoinExchange> createBitcoinExchanges( std::ifstream &infile, std::ifstream &data );
 
 // Print
-	static void printBitcoinExchanges( std::vector<BitcoinExchange> bitcoin_exchanges );
+	static void printBitcoinExchanges( std::list<BitcoinExchange> bitcoin_exchanges );
 };

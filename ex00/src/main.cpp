@@ -31,7 +31,7 @@ int main( int argc, char **argv )
 		return (1);
 	}
 
-	std::vector<BitcoinExchange> bitcoin_exchanges;
+	std::list<BitcoinExchange> bitcoin_exchanges;
 
 	bitcoin_exchanges = BitcoinExchange::createBitcoinExchanges( infile, dataInfile );
 	BitcoinExchange::printBitcoinExchanges( bitcoin_exchanges );
