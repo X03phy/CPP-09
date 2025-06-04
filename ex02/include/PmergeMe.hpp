@@ -6,7 +6,7 @@
 /*   By: ebonutto <ebonutto@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 16:28:22 by ebonutto          #+#    #+#             */
-/*   Updated: 2025/06/03 18:11:23 by ebonutto         ###   ########.fr       */
+/*   Updated: 2025/06/04 14:16:23 by ebonutto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,15 +134,15 @@ public:
 		int value;
 		typename Container::iterator pos;
 
-		for (size_t i = 0; i < jacobsthalSequence.size(); ++i)
+		for ( size_t i = 0; i < jacobsthalSequence.size(); ++i )
 		{
 			index = jacobsthalSequence[i] - 1; // car la séquence est en base 1
 			if ( static_cast<size_t>(index) >= pendantChain.size() )
 				continue; // protection au cas où
 
 			value = pendantChain[index];
-			pos = std::lower_bound(mainChain.begin(), mainChain.end(), value);
-			mainChain.insert(pos, value);
+			pos = std::lower_bound( mainChain.begin(), mainChain.end(), value );
+			mainChain.insert( pos, value );
 		}
 
 		// Gerer le dernier nb
