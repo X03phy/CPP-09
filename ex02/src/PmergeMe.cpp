@@ -109,7 +109,7 @@ void PmergeMe::MergeThat( void )
 	std::cout << "Time: " << _vectorTime << " µs" << std::endl;
 
 	std::cout << "checker: ";
-	if ( this->checker( _vectorSequence, _vectorSequenceSorted ) == false )
+	if ( this->checker( _vectorSequence, _vectorSequenceSorted ) != false )
 		std::cout << "OK" << std::endl;
 	else
 		std::cout << "KO" << std::endl;
@@ -148,7 +148,7 @@ void PmergeMe::MergeThat( void )
 	std::cout << "Time: " << _dequeTime << " µs" << std::endl;
 
 	std::cout << "checker: ";
-	if ( this->checker( _dequeSequence, _dequeSequenceSorted ) == false )
+	if ( this->checker( _dequeSequence, _dequeSequenceSorted ) != false )
 		std::cout << "OK" << std::endl;
 	else
 		std::cout << "KO" << std::endl;
