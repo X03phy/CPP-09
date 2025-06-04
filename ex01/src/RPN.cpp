@@ -40,6 +40,8 @@ bool RPN( std::string &entry, int &result )
 		}
 		else
 		{
+			if ( _stack.size() >= 2 )
+				return ( false );
 			if ( token.size() > 2 )
 				return ( false );
 			result = std::strtol( token.c_str(), &end, 10 );
