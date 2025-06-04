@@ -51,6 +51,7 @@ public:
 	bool ParseInput( char **argv );
 	void MergeThat( void );
 	static std::vector<int> generateJacobsthalSequence( int n );
+	std::vector<int> getInsertPos( std::vector<int> &jacobsthalSequence, size_t n );
 
 	template <typename Container>
 	Container mergeInsertionSort( Container container )
@@ -77,22 +78,21 @@ public:
 			oddElement = container.back();
 			--n;
 		}
+
 		for ( size_t i = 0; i < n; i += 2 )
 		{
 			if ( container[i] > container[i + 1] )
 				pairs.push_back( std::make_pair( container[i], container[i + 1] ) );
 			else
-				pairs.push_back( std::make_pair(container[i + 1], container[i]) );
+				pairs.push_back( std::make_pair( container[i + 1], container[i] ) );
 		}
 
 		// Tri recursif des plus grands elements de chaque paire
 		Container largerElements;
-		Container smallerElements;
 
 		for ( std::vector< std::pair<int, int> >::const_iterator it = pairs.begin(); it != pairs.end(); ++it )
 		{
 			largerElements.push_back( it->first );
-			smallerElements.push_back( it->second );
 		}
 
 		if ( largerElements.size() > 1 )
@@ -101,48 +101,31 @@ public:
 		// Creation de la chaine pricinpale
 		Container mainChain = largerElements;
 
-		if ( !smallerElements.empty() )
-		{
-			for ( std::vector< std::pair<int, int> >::const_iterator it = pairs.begin(); it != pairs.end(); ++it )
-			{
-				if ( it->first == mainChain[0] )
-				{
-					mainChain.insert( mainChain.begin(), it->second );
-					break;
-				}
-			}
-		}
-
 		// On cree la liste de petits nombres
 		Container pendantChain;
 
-		for ( size_t i = 2; i < mainChain.size(); ++i )
+		for ( size_t i = 0; i < pairs.size(); i++ )
 		{
-			for ( size_t j = 0; j < pairs.size(); ++j )
-			{
-				if ( pairs[j].first == mainChain[i] )
-				{
-					pendantChain.push_back( pairs[j].second );
-					break;
-				}
-			}
+			if ( pairs[i].first == mainChain[0] )
+				mainChain.insert( mainChain.begin(), pairs[i].second );
+			else
+				pendantChain.push_back( pairs[i].second );
 		}
 
-		// On place les petits nombres
-		std::vector<int> jacobsthalSequence = generateJacobsthalSequence( pendantChain.size() );
-		int index;
-		int value;
-		typename Container::iterator pos;
-
-		for ( size_t i = 0; i < jacobsthalSequence.size(); ++i )
+		// On place les petits nombres de pendantChain dans mainChain
+		if ( pendantChain.size() >= 1 )
 		{
-			index = jacobsthalSequence[i] - 1; // car la séquence est en base 1
-			if ( static_cast<size_t>(index) >= pendantChain.size() )
-				continue; // protection au cas où
+			int index;
+			typename Container::iterator pos;
+			std::vector<int> jacobsthalSequence = generateJacobsthalSequence( pendantChain.size() );
+			std::vector<int> insertOrder = getInsertPos( jacobsthalSequence, pendantChain.size() );
 
-			value = pendantChain[index];
-			pos = std::lower_bound( mainChain.begin(), mainChain.end(), value );
-			mainChain.insert( pos, value );
+			for ( size_t i = 0; i < pendantChain.size(); ++i )
+			{
+				index = insertOrder[i];
+				pos = std::lower_bound( mainChain.begin(), mainChain.end(), pendantChain[index] );
+				mainChain.insert( pos, pendantChain[index] );
+			}
 		}
 
 		// Gerer le dernier nb
@@ -161,10 +144,13 @@ public:
 		if ( sequence.size() != sequenceSorted.size() )
 			return ( false );
 
-		for ( size_t i = 0; ( i + 1 ) < sequenceSorted.size(); ++i )
-			if ( sequenceSorted[i] > sequenceSorted[i + 1] )
-				return ( false );
+		// Trie une copie de `sequence`
+		std::sort( sequence.begin(), sequence.end() );
 
-		return ( true );
+		std::cout << std::endl;
+		// Compare les deux séquences
+		return ( sequence == sequenceSorted );
 	}
 };
+
+// 4711 38852 4646 36206 48923 78168 12761 10359 51034 38800 73978 1055 32849 94016 49914 86754 79865 47526 65103 92247 3845 27954 6159 87190 68153 46489 44777 58225 9817 82158 7733 25858 85461 44040 24290

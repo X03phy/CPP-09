@@ -43,33 +43,52 @@ bool PmergeMe::ParseInput( char **argv )
 	return ( true );
 }
 
+// Sequence utilisable dans l'algorithme Ford-Johnson
 std::vector<int> PmergeMe::generateJacobsthalSequence( int n )
 {
 	std::vector<int> jacobsthal;
+
+	jacobsthal.push_back( 0 );
 
 	if ( n == 0 )
 		return ( jacobsthal );
 
 	jacobsthal.push_back( 1 );
 
-	if ( n == 1 )
+	if ( n <= 3 )
 		return ( jacobsthal );
 
 	jacobsthal.push_back( 3 );
 
-	int i = 2;
 	int next;
 	while ( 1 )
 	{
-		next = jacobsthal[i - 1] + 2 * jacobsthal[i - 2];
+		next = jacobsthal[jacobsthal.size() - 1] + 2 * jacobsthal[jacobsthal.size() - 2];
 		if ( next > n )
 			break;
 		jacobsthal.push_back( next );
-		++i;
 	}
 
 	return ( jacobsthal );
 }
+
+std::vector<int> PmergeMe::getInsertPos( std::vector<int> &jacobsthalSequence, size_t n )
+{
+	std::vector<int> order;
+
+	for ( size_t i = 0; i < jacobsthalSequence.size(); ++i )
+	{
+		order.push_back( jacobsthalSequence[i] );
+		for ( int j = ( jacobsthalSequence[i] - 1 ); j > jacobsthalSequence[i - 1]; --j )
+			order.push_back(j);
+	}
+
+	for ( size_t i = ( jacobsthalSequence[jacobsthalSequence.size() - 1] + 1 ); i < n; ++i )
+		order.push_back(i);
+
+	return ( order );
+}
+
 
 void PmergeMe::MergeThat( void )
 {
