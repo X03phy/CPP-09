@@ -7,7 +7,7 @@ PmergeMe::PmergeMe( void ) {}
 PmergeMe::~PmergeMe( void ) {}
 
 // Copy constructor
-PmergeMe::PmergeMe( const PmergeMe &other ) : _vectorSequence( other._vectorSequence ), _dequeSequence( other._dequeSequence ) {}
+PmergeMe::PmergeMe( const PmergeMe &other ) : _vectorSequence( other._vectorSequence ), _dequeSequence( other._dequeSequence ), _vectorSequenceSorted( other._vectorSequenceSorted ), _dequeSequenceSorted( other._dequeSequenceSorted ), _vectorTime( other._vectorTime ), _dequeTime( other._dequeTime ) {}
 
 // Copy assignment operator
 PmergeMe &PmergeMe::operator=( const PmergeMe &other )
@@ -16,6 +16,10 @@ PmergeMe &PmergeMe::operator=( const PmergeMe &other )
 	{
 		_vectorSequence = other._vectorSequence;
 		_dequeSequence = other._dequeSequence;
+		_vectorSequenceSorted = other._vectorSequenceSorted;
+		_dequeSequenceSorted = other._dequeSequenceSorted;
+		_vectorTime = other._vectorTime;
+		_dequeTime = other._dequeTime;
 	}
 
 	return ( *this );
