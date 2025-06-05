@@ -6,7 +6,7 @@
 /*   By: ebonutto <ebonutto@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 16:28:22 by ebonutto          #+#    #+#             */
-/*   Updated: 2025/06/05 10:41:54 by ebonutto         ###   ########.fr       */
+/*   Updated: 2025/06/05 10:51:10 by ebonutto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,7 +144,6 @@ public:
 		// Trie une copie de `sequence`
 		std::sort( sequence.begin(), sequence.end() );
 
-		std::cout << std::endl;
 		// Compare les deux séquences
 		return ( sequence == sequenceSorted );
 	}
