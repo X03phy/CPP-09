@@ -6,7 +6,7 @@
 /*   By: ebonutto <ebonutto@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 16:28:22 by ebonutto          #+#    #+#             */
-/*   Updated: 2025/06/04 14:16:23 by ebonutto         ###   ########.fr       */
+/*   Updated: 2025/06/05 10:41:54 by ebonutto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,19 +87,16 @@ public:
 				pairs.push_back( std::make_pair( container[i + 1], container[i] ) );
 		}
 
-		// Tri recursif des plus grands elements de chaque paire
-		Container largerElements;
+		// Tri recursif des plus grands elements de chaque paire -> chaine principale
+		Container mainChain;
 
 		for ( std::vector< std::pair<int, int> >::const_iterator it = pairs.begin(); it != pairs.end(); ++it )
 		{
-			largerElements.push_back( it->first );
+			mainChain.push_back( it->first );
 		}
 
-		if ( largerElements.size() > 1 )
-			largerElements = mergeInsertionSort( largerElements );
-
-		// Creation de la chaine pricinpale
-		Container mainChain = largerElements;
+		if ( mainChain.size() > 1 )
+			mainChain = mergeInsertionSort( mainChain );
 
 		// On cree la liste de petits nombres
 		Container pendantChain;
